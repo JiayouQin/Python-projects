@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[90]:
+# In[11]:
 
+
+import re 
 
 def str_tobinary(inputstring):
     return ''.join(bin(x)[2:].zfill(8) for x in inputstring.encode('UTF-8'))
@@ -56,18 +58,32 @@ def key_gen(inputstring):#to do: convert 8 digital
         subkey.append(key_perm)
     return subkey
 
+def bitoascii(inputstring):
+    outputstring = ""
+    while len(inputstring) > 8 :
+        outputstring += chr(int(inputstring[:8],2))
+        inputstring = inputstring [8:]
+    outputstring += chr(int(inputstring,2))
+    return outputstring
+
+def str_tobinary(inputstring):
+    return ''.join(bin(x)[2:].zfill(8) for x in inputstring.encode('UTF-8'))
+
 def text_to_64bit(inputstring): #cut messeage block into a lists that contains 64bit units
     outputlist = []
-    #convert inputstring into 8 digital string
+    #some magic that converts inputstring into binary string
+    inputstring = ''.join('{:08b}'.format(b) for b in inputstring.encode('utf8'))
     while len (inputstring) != 0:
-        if 0 < len(inputstring) < 8:
-            for _ in range(0,8 - len(inputstring)):
-                inputstring += " "
+        if 0 < len(inputstring) < 64:
+            for _ in range(0,int(64 - len(inputstring)/8)):
+                if len(inputstring) % 8 != 0:
+                    print ("Critical error in text to binary algorithm")
+                inputstring += "00100000" #add space if input text less than 64 bits
         else:
-            tempstring = inputstring[:8]
-            inputstring = inputstring[8:]
-            outputlist.append(str_tobinary(tempstring))
-    return outputlist
+            tempstring = inputstring[:64]
+            inputstring = inputstring[64:]
+            outputlist.append(tempstring) 
+    return outputlist #returns a list that contains 64bits binary unicode in each index
 
 def xor(mes,subkey):
     newstring = ""
@@ -123,14 +139,6 @@ def decryption(cipher,subkeys):
     outputstring = ""
     for i in range(len(inputlist)):
         outputstring += logic_64_encrypt(inputlist[i],subkeys)
-    return outputstring
-
-def bitoascii(inputstring):
-    outputstring = ""
-    while len(inputstring) > 8 :
-        outputstring += chr(int(inputstring[:8],2))
-        inputstring = inputstring [8:]
-    outputstring += chr(int(inputstring,2))
     return outputstring
 
 def checkfile():
@@ -234,7 +242,7 @@ sboxdict = {"1":[[14,4,13,1,2,15,11,8,3,10,6,12,5,9,0,7],
             [2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11]]}
 
 
-# In[ ]:
+# In[22]:
 
 
 """
@@ -269,8 +277,13 @@ if askimport == "i":
     print ("--------------------This is the contents of the File---------------------")
     print (textinput)
     print ("-------------------------------------------------------------------------")
+    
 elif askimport == "w":
     textinput = input ("Type any text in here")
+    print ("-----------------------------Plain Text----------------------------------")
+    print (textinput)
+    print ("-------------------------------------------------------------------------")
+    
 elif askimport == "d":
         file = open("DES_encrypted.txt", "r")
         textinput = file.read()
@@ -283,17 +296,18 @@ if textinput == "":
 else:
     run = True
 if run:
-    key_input = ""
+    key_input = "" #input the key
     while len(key_input) != 8:
         key_input = keyinput_to8()
     subkeys = key_gen(key_input)
     if askimport != "d":
-        inputlist = text_to_64bit(textinput)
+        inputlist = text_to_64bit(textinput) #cut text to 64-bits blocks
         outputstring = ""
         plaintext = ""
         for i in range(len(inputlist)):
             plaintext += inputlist[i]
             outputstring += logic_64_encrypt(inputlist[i],subkeys)
+            #again, some magic that converts binary unicode into strings
         print ("-----------------Plain Text------------")
         print (bitoascii(plaintext))
         print ("-----------------Encrypted data--------")
@@ -303,9 +317,11 @@ if run:
         file.close() 
 
     elif run and askimport == "d":
-        outputstring = bitoascii(decryption(textinput,subkeys))
-        print (outputstring)
         try:
+            outputstring = decryption(textinput,subkeys)
+            outputstring = bytes(int(b, 2) for b in re.split('(........)', outputstring) if b).decode('utf8')
+            #again, some magic that converts binary unicode into strings
+            print (outputstring)
             file = open("DES_decrypted.txt", "w+")
             file.write(outputstring)
             file.close()
@@ -314,6 +330,32 @@ if run:
     else:
         pass
 input("Press Enter to continue...")
+
+
+# In[6]:
+
+
+inputstring = "12345678"
+outputlist = []
+#some magic that converts inputstring into binary string
+inputstring = ''.join('{:08b}'.format(b) for b in inputstring.encode('utf8'))
+print (inputstring)
+while len (inputstring) != 0:
+    if 0 < len(inputstring) < 64:
+        for _ in range(0,64 - len(inputstring)/8):
+            inputstring += "00100000" #add space if input text less than 64 bits
+            print ("+1")
+    else:
+        tempstring = inputstring[:64]
+        inputstring = inputstring[64:]
+        outputlist.append(tempstring) 
+print(outputlist)  #returns a list that contains 64bits binary unicode in each index
+
+
+# In[5]:
+
+
+len("0011000100110010001100110011010000110101001101100011011100111000")
 
 
 # In[ ]:
