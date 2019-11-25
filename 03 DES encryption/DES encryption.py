@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[11]:
+# In[45]:
 
 
 import re 
@@ -145,14 +145,10 @@ def checkfile():
     try :
         file = open("DES_text.txt", "r")
         file.close() 
-        file = open("DES_encrypted.txt", "r")
-        file.close() 
+
     except:
         print ("file has not been found, a new file will be created")
         f= open("DES_text.txt","w+")
-        f.close()
-        f= open("DES_encrypted.txt","w+")
-        file.close()
         
 def keyinput_to8():
     key_input = ""
@@ -161,6 +157,26 @@ def keyinput_to8():
     while 0 < len(key_input) < 8:
         key_input += " "
     return key_input
+
+def readbytes2bistring():
+    outputlist = []
+    outputstring = ""
+    try:
+        file = open("DES_encrypted.xml", "rb")
+        inputbytes = file.read()
+        for i in range(len(inputbytes)):
+            outputlist.append(inputbytes[i])
+        file.close()
+        for i in outputlist:
+            bi = str(bin(i))[2:]
+            if len(bi) != 8:
+                bi = "0"*(8-len(bi)) + bi
+            outputstring += (bi)
+        return outputstring
+    except:
+        file = open("DES_encrypted.xml","wb+")  
+        file.write("") 
+        file.close() 
 
 rounddict = {"1":1,"2":1,"3":2,"4":2,"5":2,"6":2,"7":2,"8":2,"9":1,"10":2,"11":2,"12":2,"13":2,"14":2,"15":2,"16":2}
 
@@ -242,7 +258,7 @@ sboxdict = {"1":[[14,4,13,1,2,15,11,8,3,10,6,12,5,9,0,7],
             [2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11]]}
 
 
-# In[22]:
+# In[50]:
 
 
 """
@@ -285,9 +301,7 @@ elif askimport == "w":
     print ("-------------------------------------------------------------------------")
     
 elif askimport == "d":
-        file = open("DES_encrypted.txt", "r")
-        textinput = file.read()
-        file.close()
+        textinput = readbytes2bistring()
         print ("--------------------This is the contents of the File---------------------")
         print (textinput)
         print ("-------------------------------------------------------------------------")
@@ -302,19 +316,20 @@ if run:
     subkeys = key_gen(key_input)
     if askimport != "d":
         inputlist = text_to_64bit(textinput) #cut text to 64-bits blocks
-        outputstring = ""
+        outputlist = []
         plaintext = ""
         for i in range(len(inputlist)):
-            plaintext += inputlist[i]
-            outputstring += logic_64_encrypt(inputlist[i],subkeys)
-            #again, some magic that converts binary unicode into strings
-        print ("-----------------Plain Text------------")
-        print (bitoascii(plaintext))
-        print ("-----------------Encrypted data--------")
-        print (outputstring)
-        file = open("DES_encrypted.txt","w+")  
-        file.write(outputstring) 
+            encrypted64 = logic_64_encrypt(inputlist[i],subkeys) #encrypt data
+            for i in range(0,len(encrypted64)+1): # convert binary string to byte array
+                if i % 8 == 0 and i != 0:
+                    outputlist.append(int(encrypted64[i-8:i],2))  
+        arr = bytearray(outputlist)
+        file = open("DES_encrypted.xml","wb+")  
+        file.write(arr) 
         file.close() 
+        print (f"output list length: {len(outputlist)}, binary lenth:{len(plaintext)} \noutput list: {outputlist}")
+        print ("-----------------Encrypted data--------")
+        print (arr)
 
     elif run and askimport == "d":
         try:
@@ -330,32 +345,6 @@ if run:
     else:
         pass
 input("Press Enter to continue...")
-
-
-# In[6]:
-
-
-inputstring = "12345678"
-outputlist = []
-#some magic that converts inputstring into binary string
-inputstring = ''.join('{:08b}'.format(b) for b in inputstring.encode('utf8'))
-print (inputstring)
-while len (inputstring) != 0:
-    if 0 < len(inputstring) < 64:
-        for _ in range(0,64 - len(inputstring)/8):
-            inputstring += "00100000" #add space if input text less than 64 bits
-            print ("+1")
-    else:
-        tempstring = inputstring[:64]
-        inputstring = inputstring[64:]
-        outputlist.append(tempstring) 
-print(outputlist)  #returns a list that contains 64bits binary unicode in each index
-
-
-# In[5]:
-
-
-len("0011000100110010001100110011010000110101001101100011011100111000")
 
 
 # In[ ]:
