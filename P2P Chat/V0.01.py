@@ -12,6 +12,7 @@ class mainfunc(threading.Thread):
         self.s = s
         self.conn = []
         self.addr = []
+        
     def run(self):
         self.root = tk.Tk()
         self.canvas = tk.Canvas(self.root,width = self.windowsize[0],height = self.windowsize[1], bg="#fad92f")
