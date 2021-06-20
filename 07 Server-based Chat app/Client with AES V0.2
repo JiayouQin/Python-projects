@@ -1,0 +1,170 @@
+from Cryptodome.Cipher import AES
+import tkinter as tk
+from tkinter import filedialog, Text
+import threading,socket
+from configparser import ConfigParser
+import sys
+
+class mainfunc(threading.Thread):
+    def __init__(self,windowsize,s):
+        threading.Thread.__init__(self)
+        self.start()
+        self.windowsize = windowsize
+        self.connected = False
+        self.s = s
+        self.conn = []
+        self.addr = []
+    def run(self):
+        self.root = tk.Tk()
+        self.root.title("AES encrypted Chat")
+        self.canvas = tk.Canvas(self.root,width = self.windowsize[0],height = self.windowsize[1], bg="#fad92f")
+        self.canvas.pack()
+        self.sending = ""
+        print(self.sending)
+        #---------------chat page-----------------
+        self.chatlogbg = tk.Canvas(self.root, bg="#fad92f")
+        self.chatlogbg.place(relwidth=0.85,relheight=0.80,relx=0.15,rely=0)
+        self.textBox1=Text(self.chatlogbg,height=4)
+        self.textBox1.place(relwidth=0.9,relheight=0.9,relx=0.02,rely=0.05)
+
+        
+        #---------------input --------------------
+        self.inputblank = tk.Frame(self.root, bg="#b5b5b5")
+        self.inputblank.place(relwidth=0.85,relheight=0.2,relx=0.15,rely=0.8)
+        self.textBox2=Text(self.inputblank,height=4)
+        self.textBox2.place(relwidth=0.95,relheight=0.9,relx=0.02,rely=0.05)
+        self.submit = tk.Button(self.inputblank)
+        self.root.bind('<Return>', self.uicallback)
+        
+        #---------------sidebar-------------------
+        self.sidebar = tk.Frame(self.root, bg="#000000")
+        self.sidebar.place(relwidth=0.15,relheight=1)
+        self.root.mainloop()
+        print("session ended")
+        self.root.destroy
+    def uicallback(self,event):
+        if self.connected == True:
+            self.sending = name +": "+ self.textBox2.get("1.0", "end-1c")
+            sending(self.sending)
+            self.textBox2.delete("1.0", "end-1c")
+            
+
+def sending(inputmessage):
+    eclist = []
+    ecdata = b""
+    
+    if inputmessage != "/disconnect":
+        message = inputmessage.encode(FORMAT)
+        
+        #encrypt message to bytes
+        while message:
+            temp = message[:32]
+            message = message[32:]
+            print(f"temp length {len(temp)}")
+            if len(temp) < 32:
+                temp += (32-len(temp))* b" "
+            ecdata += obj.encrypt(temp)
+        print(ecdata)
+        print(f"ec data length {len(ecdata)}")
+        send_length = str(len(ecdata)).encode(FORMAT)
+        send_length += b' ' * (HEADER - len(send_length))
+        uiinstance.s.send(send_length)
+        uiinstance.s.send(ecdata)
+        
+        
+def checkini():
+    try:
+        with open("config.ini") as f: #check if ini exists
+            pass
+        file = "config.ini"
+        config=ConfigParser()
+        config.read(file)
+    except IOError:
+        file = "config.ini"
+        config=ConfigParser()
+        config.read(file)
+        config.add_section("General")
+        config.set("General","name","DefualtUser")
+        config.set("General","HEADER","32")
+        config.set("General","FORMAT","UTF-8")
+        config.set("General","port","6667")
+        config.set("General","serverip","106.52.154.11")
+        with open(file,"w") as configfile:
+            config.write(configfile)
+    finally:
+        pass
+
+    
+def client_listen_start():
+    print (f"server is listening on {serverip}")
+    while uiinstance.connected:
+        msg_length = s.recv(HEADER).decode(FORMAT)
+        print(f"receiving message from{s},header length{msg_length}")
+        if msg_length:
+            msg_length = int(msg_length) #how many bytes will be receiving
+            ecdata = s.recv(msg_length)
+            try:
+                msg = obj.decrypt(ecdata).decode(FORMAT)
+            except:
+                msg = str(ecdata)
+            for i in range(1,len(msg)):
+                if msg[-i] != " ":
+                    print(-i)
+                    break
+                    
+            msg = msg[:-i] + "\n"
+            print(f"message content:{msg}")
+            uiinstance.textBox1.insert(tk.END, msg)
+            if msg == "/disconnect":
+                uiinstance.connected = False
+
+    s.close()
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+windowsize = (1440,720)
+configfile = "config.ini"
+config=ConfigParser()
+config.read(configfile)
+
+print("Threading Ok, initializing Client")
+checkini()
+name = config["General"]["name"]
+HEADER = int(config["General"]["HEADER"])
+FORMAT = config["General"]["FORMAT"]
+port = int(config["General"]["port"])
+serverip = config["General"]["serverip"]
+uiinstance = mainfunc(windowsize,s)
+#clientip = socket.gethostbyname(socket.gethostname()) # get host ip
+#--------------AES moudule
+try:
+    runstate = 0
+    with open('32byteskey.pem', mode='rb') as f:
+        key = f.read()    
+    obj=AES.new(key, AES.MODE_ECB)
+    #--------------is a client
+    print("Binding IP to socket")
+    print(f"connecting to peer{serverip}.")
+    runstate = 1
+    uiinstance.s.connect((serverip,port))
+    print(f"peer{serverip} connected.")
+    uiinstance.connected = True
+    runstate = 2
+    t = threading.Thread(client_listen_start())
+    
+    
+    t.start()
+except:
+    if runstate == 0:
+        err = "failed to find 32byteskey.pem"
+    elif runstate == 1:
+        err = "failed to connect server"
+    elif runstate == 2:
+        err = "failed to receive data from the client、connection interrupted"
+    with open('Errorlog.txt', mode='w') as f:
+        f.write(err)  
+    print(f"Error! runstate = {runstate}")
+    pass
+
+
+s.close()
+sys.exit()
