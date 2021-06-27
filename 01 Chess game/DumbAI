@@ -8,6 +8,8 @@ for this game the AI should perform well enough
 """
 
 
+import random
+
 def checkwin(chess,chessplaced): #check if the game is won
     originalchess = chessplaced
     chess = chess
@@ -92,19 +94,24 @@ def evaluate(chess,chessplaced): #evaluates the current situation, should not be
     
     
 def decide(chess,chessplaced): #will eventually return a index number
-
     weight = evaluate(chess,chessplaced)
+    temp =[]
     if chess == "X":
-        return weight.index(min(weight))
+        for i in range(len(weight)):
+            min_index = min(weight)
+            if weight[i] == min_index:
+                temp.append(i)
+        return random.choice(temp)
     if chess == "O":
-        return weight.index(max(weight))
+        for i in range(len(weight)):
+            max_index = max(weight)
+            if weight[i] == mex_index:
+                temp.append(i)
+        return random.choice(temp)
     
-
-
     
 chess = "X"
-chessplaced = ['1', '2', '3', '4', 'X', 'X', '7', 'O', 'O']
-
+chessplaced = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 index = decide(chess,chessplaced)
 print(f"The AI has decided to go on {index+1}")
 print(f"final chess plate after calculation : {chessplaced}")
