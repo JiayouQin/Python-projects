@@ -1,0 +1,110 @@
+"""
+This is a very dumb AI created for the Tik tak toe game.
+I call it blind waling- defensive method
+the AI does not do any recusive thinking and only sees 2 steps ahead, 
+it will not do anything stupid to let himself lose but it could get trapped very easily
+for this game the AI should perform well enough
+
+"""
+
+
+def checkwin(chess,chessplaced): #check if the game is won
+    originalchess = chessplaced
+    chess = chess
+    print(chessplaced)
+    #check if is someone  have won
+    end = (chessplaced[1-1] == chessplaced[2-1] == chessplaced [3-1]) or \
+            (chessplaced[4-1] == chessplaced[5-1] == chessplaced[6-1]) or \
+            (chessplaced[7-1] == chessplaced[8-1] == chessplaced[9-1]) or \
+            (chessplaced[1-1] == chessplaced[4-1] == chessplaced[7-1]) or \
+            (chessplaced[2-1] == chessplaced[5-1] == chessplaced[8-1]) or \
+            (chessplaced[3-1] == chessplaced[6-1] == chessplaced[9-1]) or \
+            (chessplaced[1-1] == chessplaced[5-1] == chessplaced[9-1]) or \
+            (chessplaced[7-1] == chessplaced[5-1] == chessplaced[3-1])
+    #print(end)
+    
+    if end == True:
+        if chess == "X": #this condition is reversed
+            print("X wins one time")
+            return -1
+        elif chess == "O":
+            print("O wins one time")
+            return 1
+    else:
+        return 0
+    
+def anotherchess(chess):
+    if chess == "O":
+        return "X"
+    elif chess == "X":
+        return "O"
+
+def occupied(chess):
+    if chess == "X": #make the AI don't want to place on the existing chess
+        return 999
+    elif chess == "O":
+        return -999
+    
+    
+def evluate_player(chess,chessplaced): # input should be opponent if the AI sees that the player could win the game the score will drop by 10
+    print(f"thinking about human moves, his chess would be {chess}")
+    score = 0
+    for i in range(len(chessplaced)):
+        if chessplaced[i] != "X" and chessplaced[i] != "O":
+            print(f"thinking about human move on {i+1}")
+            chessplaced[i] = chess #change the chessboard temporarily
+            temp = checkwin(chess,chessplaced) 
+            score += temp
+            print(f"think this score is {temp}")
+            chessplaced[i] = str(i+1)   #reset the board
+            if chess == "O" and temp == 1: #if O have won
+                print("the Human O will win! Not @ccept@ble!!!")
+                return 1
+            elif chess == "X" and temp == -1:# if X have won
+                print("the Human X will win! Not @ccept@ble!!!")
+                return  -1
+    return score
+
+def evaluate(chess,chessplaced): #evaluates the current situation, should not be used seperately
+    weight = [0,0,0,0,0,0,0,0,0]
+    
+    for i in range(len(chessplaced)):#check if AI will win after placing a chess
+        score = 0
+        if chessplaced[i] != "X" and chessplaced[i] != "O":
+            print(f"trying to place {chess} on {i+1}")
+            chessplaced[i] = chess
+            if checkwin(chess,chessplaced) == 0:# if the AI did not win, it will check for possible player move
+                print(f"will not win if placing on {i}, think about opponent move")
+                score += evluate_player(anotherchess(chess),chessplaced) # consider what human player will do
+                print(f"the score will be {score}")
+            else: #in this case the AI only consider if someone will win, since it is his move
+                print(f"if place chess in {i} the AI will win")
+                score += checkwin(chess,chessplaced)
+                print(f"score of the move is:")
+            chessplaced[i] = str(i+1)
+            weight[i]= score
+        else:
+            weight[i] = occupied(chess)
+    print(weight)
+    return weight
+
+    
+    
+    
+def decide(chess,chessplaced): #will eventually return a index number
+
+    weight = evaluate(chess,chessplaced)
+    if chess == "X":
+        return weight.index(min(weight))
+    if chess == "O":
+        return weight.index(max(weight))
+    
+
+
+    
+chess = "X"
+chessplaced = ['1', '2', '3', '4', 'X', 'X', '7', 'O', 'O']
+
+index = decide(chess,chessplaced)
+print(f"The AI has decided to go on {index+1}")
+print(f"final chess plate after calculation : {chessplaced}")
