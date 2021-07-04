@@ -1,0 +1,14 @@
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        
+        def climb(step):
+            try:
+                return memo[step]
+            except:
+                result = climb((step)-1) + climb((step)-2) #ask the stairs before it
+                memo.append(result)
+                return result
+        memo = [None,1,2]
+        result=climb(n)
+        print(memo)
+        return result
