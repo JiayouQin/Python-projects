@@ -1,13 +1,18 @@
 class Solution:
     def climbStairs(self, n: int) -> int:
-        
-        def climb(step):
+        #----------------ugly function, I've put it here to make my input easier
+        def climb(step): 
             try:
                 return memo[step]
             except:
-                result = climb((step)-1) + climb((step)-2) #ask the stairs before it
-                memo.append(result)
+                #ask the stairs before it and combine the result
+                result = climb((step)-1) + climb((step)-2) 
+                
+                #append to the last index in result, since it is depth-first search, result will be generated in order
+                memo.append(result)       
                 return result
+                
+        #-----------------main 
         memo = [None,1,2]
         result=climb(n)
         print(memo)
