@@ -3,24 +3,24 @@ from flask_bcrypt import Bcrypt #User authentication
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 import os
-#from admin import admin #redundant moudule
+
 
 
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-#app.register_blueprint(admin, url_prefix="")
-app.secret_key = "help!"
+
+app.secret_key = "help!" # Please change this key to any key you want
 app.permanent_session_lifetime = timedelta(minutes=10)
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db' # Data base file and name
 app.config['SQLALCHEMY_TRACH_MODIFICATIONS'] = True
 
 
 db = SQLAlchemy(app)
 
-class utility(db.Model):
+class utility(db.Model):# Utility function
     _id = db.Column("id",db.Integer, primary_key=True)
     name = db.Column("name", db.String(200),nullable=False)
     param = db.Column(db.Integer)
@@ -30,7 +30,7 @@ class utility(db.Model):
         self.param = param
 
 
-class users(db.Model):
+class users(db.Model): # User data base
     _id = db.Column("id", db.Integer, primary_key=True)
     name = db.Column("name", db.String(200),nullable=False)
     email = db.Column(db.String(200))
@@ -42,7 +42,7 @@ class users(db.Model):
         self.email = email
         self.password = password
 
-class entries(db.Model):
+class entries(db.Model): # Posts
     _id = db.Column("id", db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     author = db.Column(db.String(200))
@@ -55,9 +55,9 @@ class entries(db.Model):
         self.author = author
         
 
-class replies(db.Model):
+class replies(db.Model): #replies
     _id = db.Column("id", db.Integer, primary_key=True)
-    adressing_id = db.Column(db.String(100))
+    adressing_id = db.Column(db.String(100))  # id of the post replying to
     name  = db.Column(db.String(200))
     reply = db.Column(db.String(1000))
 
@@ -68,7 +68,7 @@ class replies(db.Model):
 
 
 
-@app.route("/admin")
+@app.route("/admin") # access this page manually
 def admin_page():
 
     if "user" in session:
@@ -76,7 +76,7 @@ def admin_page():
     else:
         return redirect(url_for("home"))
 
-    if session["user"] == "Vogel":
+    if session["user"] == "admin":
         return render_template("admin.html", 
             name="admin",values=users.query.all(),
             entries=entries.query.all(),
@@ -88,7 +88,7 @@ def admin_page():
         return redirect(url_for("home"))
 
 
-@app.route("/", methods = ["GET","POST"])
+@app.route("/", methods = ["GET","POST"]) # index page
 def home():
     if "user" in session:
         user = session["user"]
@@ -103,7 +103,7 @@ def home():
     return render_template("index.html",name=user,values=entries.query.all())
 
 
-@app.route("/posts/<post_id>", methods = ["GET","POST"])
+@app.route("/posts/<post_id>", methods = ["GET","POST"]) # post page
 def posts(post_id):
     found_post=entries.query.filter_by(_id=post_id).first()
     if found_post:
@@ -123,7 +123,7 @@ def posts(post_id):
         return "<h1> No relevant page found!!!</h1>"
     
 
-@app.route("/login", methods = ["GET","POST"])
+@app.route("/login", methods = ["GET","POST"]) #login page
 def login_page():
     error = ""
     try:
@@ -151,7 +151,7 @@ def login_page():
 
 
 
-@app.route("/register", methods = ["GET","POST"])
+@app.route("/register", methods = ["GET","POST"]) #registering page
 def register():
     email = None
     if request.method == "POST":
