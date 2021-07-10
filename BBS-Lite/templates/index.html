@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+<div style="margin: 0 auto; width: 1000px">
+
+<div class="well">
+<h1>Hello {{name}}</h1>
+<br><br>
+<p>网页简易说明：<p>
+<p>该服务器使用 flask 后端，密码使用flask_bcrypt进行加密，邮箱不进行验证，密码不设强度<p>
+<p>发帖之前请在右上角注册,该服务器测试运行，不定时删档<p>
+</div>
+<br><br>
+
+
+<div class="well">
+	<h3>Posts:</h3>
+	<br>
+	<div style="padding-left:100px">
+	{% for item in values[::-1] %} 
+	<div style=" display: inline-block;">
+		<!--add a tag:  <span class="label label-default">{{replies|length}}</span>  -->
+		<a style="font-size:170%"href="/posts/{{item._id}}">{{item.title}}</a></div>
+	<div style=" width: 140px; display: inline-block;"><p style="padding-left:40px"><span class="label label-info">{{item.author}}</span></p></div>
+	<br>
+	{% endfor %} 
+</div>
+</div>
+
+
+
+
+<br><br>
+<div class="well">
+	<h3> Make a post now: </h3>
+	<form method="post">
+	  <label for="ftitle">Title</label>
+	  <input type="text" id="ftitle" name="submit_title" size="100"><br><br>
+	  <textarea id="summernote" name="submit_content"></textarea>
+	  <input type="submit" value="Submit">
+	</form>
+
+	<script>
+    $(document).ready(function() {
+      $('#summernote').summernote({
+        placeholder: 'Please do be respectful submitting any posts',
+        tabsize: 4,
+        height: 200
+      });
+    });
+	</script>
+</div>
+</div>
+
+{% endblock %}

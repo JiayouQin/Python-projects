@@ -1,0 +1,26 @@
+{% extends "base.html"%}
+{% block title %} 
+Admin
+{% endblock %}
+
+{% block content %} 
+
+	<p>last post:{{last_post_id}}</p>
+	<p>last reply:{{last_reply_id}}</p>
+	<p> --------user-----------</p>
+	{% for item in values %} 
+		<p>Name: {{item.name}}, email: {{item.email}}, hash: {{item.password}}</p>
+	{% endfor %} 
+	<br><br>
+	<p> --------entries-----------</p>
+	{% for item in entries %} 
+		<p>title: {{item.title}}, id: {{item._id}}, author: {{item.author}}</p>
+	{% endfor %} 
+	<br><br>
+	<p>---------replies-----------</p>
+	{% for item in found_replies %} 
+		<p>name: {{item.name}} id: {{item._id}}, adressing id: {{item.adressing_id}}</p>
+		<p>content: {{item.reply}}</p>
+	{% endfor %} 
+
+{% endblock %}

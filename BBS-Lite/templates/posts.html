@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block content %}
+
+<div style="margin: 0 auto; width: 1000px">
+  <div class="page-header">
+    <h1 style="text-align:center;">{{found_post.title}} <small style="font-size:40%">by {{found_post.author}}</small></h1>
+    <p style="text-align:right;font-size:130%"> <span class="label label-default">{{replies|length}}</span> replies</span>
+  </div>
+
+
+    <div class="well">
+      <p class="test">{{found_post.content|safe}}</p>
+    </div>
+
+  <br><br>
+
+  {% for reply in replies %}
+    {% set num = replies|length - loop.index %}
+    <small style="font-size: 130%"><span class="label label-default">{{num}}</span> <b>{{reply.name}}:</b> </small>
+    <div style="padding: 30px" class="well">
+      <p>{{reply.reply|safe}}</p>
+    </div><br><br>
+    {% set num = num + 1 %}
+  {% endfor %}
+
+
+  <h3 style="padding: 40px"> Reply this Post: </h3>
+  <form method="post">
+    <textarea id="summernote" name="reply_content"></textarea>
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    $(document).ready(function() {
+      $('#summernote').summernote({
+        placeholder: 'Please do be respectful submitting any posts',
+        tabsize: 4,
+        height: 200
+      });
+    });
+  </script>
+  <div>
+
+{% endblock %}
