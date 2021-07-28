@@ -1,7 +1,7 @@
 """
 A crappy game I create, in this game you can grab crates from a transport band and move it to another one.
 you can use Q and E to rotate the crates, however it is not required
-another game to waste your precious time, feel the power of jack ma
+another crappy game to waste your precious time, fear the factory, fear the power of jack ma
 """
 
 
