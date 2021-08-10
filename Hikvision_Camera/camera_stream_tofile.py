@@ -1,8 +1,8 @@
 """
 SDK:https://www.hikrobotics.com/cn/machinevision/service/download?module=0
-作用：读取海康威视工业摄像头数据并输出一张图像
+作用：读取海康威视工业摄像头数据并输出图像
 使用：下载开发SDK，找到MVS\Development\Samples\Python\BasicDemo，把MvImport文件夹放到该程序根目录下之后再执行！！！
-开发目的：精简官方python框架并让程序易读
+开发目的：精简官方python Demo并让程序易读
 
 what it does: read stream from HK industrial camera and output a image
 Usage: download software SDK from the link above and find install path of MVS: MVS\Development\Samples\Python\BasicDemo, copy MvImport folder to the root path of this script.
