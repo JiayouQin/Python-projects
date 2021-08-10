@@ -1,3 +1,8 @@
+#-------------discontinued and moved on to server based chat app----------
+PS: you can not really use p2p tcp/ip protocal unless the server has a public ip adress. No planning for UDP protocal update so this project is discontinued.
+
+#-------------------------------------------------------------------------
+
 This is a working in progress P2P chat app based on python
 
 Planning features for this app is RSA encryption and P2P communication
