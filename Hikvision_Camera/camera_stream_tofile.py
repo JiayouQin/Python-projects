@@ -3,11 +3,12 @@ SDK:https://www.hikrobotics.com/cn/machinevision/service/download?module=0
 作用：读取海康威视工业摄像头数据并输出图像
 使用：下载开发SDK，找到MVS\Development\Samples\Python\BasicDemo，把MvImport文件夹放到该程序根目录下之后再执行！！！
 开发目的：精简官方python Demo并让程序易读
+调用输出图像：self.output_image默认为None，每更新一次会刷新为PIL图片，模式默认为rgb（259行）
 
 what it does: read stream from HK industrial camera and output a image
 Usage: download software SDK from the link above and find install path of MVS: MVS\Development\Samples\Python\BasicDemo, copy MvImport folder to the root path of this script.
+reference output image: self.output_image in CameraOperation is None as default, each time a frame is updated it will be updated as an PIL image in RGB mode
 """
-
 
 import sys,time,threading
 sys.path.append("MvImport")
@@ -272,14 +273,6 @@ cam = MvCamera()
 ret = MvCamera.MV_CC_EnumDevices(MV_GIGE_DEVICE | MV_USB_DEVICE, deviceList)
 obj_cam_operation = CameraOperation(cam,deviceList,0)
 
-if ret != 0 or deviceList.nDeviceNum == 0:
-    print(f'show error',f'enum devices fail!{ret}')
-    print('show info',f'{deviceList.nDeviceNum} device found.')
-else:
-    print (f"found {deviceList.nDeviceNum} devices.")
-    obj_cam_operation.Open_device()
-    obj_cam_operation.connected = True
-
 def reconnect():
     print('reset cam')
     obj_cam_operation.st_device_list = MV_CC_DEVICE_INFO_LIST()
@@ -299,14 +292,3 @@ def run():
 
 if __name__ == 'main':
     run()
-
-            time.sleep(5)
-            #-------------------free buffer----------------------
-            nRet = self.obj_cam.MV_CC_FreeImageBuffer(stOutFrame) 
-
-
-print('Camera is Running!')
-obj_cam_operation = CameraOperation(cam,deviceList,0)
-obj_cam_operation.Open_device()
-obj_cam_operation.Start_grabbing()
-
