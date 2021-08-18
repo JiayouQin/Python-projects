@@ -179,17 +179,19 @@ class CameraOperation():
 
     def Start_grabbing(self):
         if self.stream == False and self.connected == True:
-
-            ret = self.obj_cam.MV_CC_SetEnumValue("TriggerMode",self.cam_mode) #set trigger mode to continuous !only 0 or 1!
-            print(f'set to continuous, success:{ret==0}')
-            ret = self.obj_cam.MV_CC_StartGrabbing()
-            print(f'start grabbing, success:{ret==0}')
-
-            self.stream = True
-            self.b_start_grabbing = True
-            self.cam_thread = threading.Thread(target=self.Work_thread)
-            self.cam_thread.start()
-
+            try:
+                ret = self.obj_cam.MV_CC_SetEnumValue("TriggerMode",self.cam_mode) #set trigger mode to continuous !only 0 or 1!
+                print(f'set to continuous, success:{ret==0}')
+                ret = self.obj_cam.MV_CC_StartGrabbing()
+                print(f'start grabbing, success:{ret==0}')
+                self.stream = True
+                self.b_start_grabbing = True
+                self.cam_thread = threading.Thread(target=self.Work_thread)
+                self.cam_thread.start()
+            except Exception as err:
+                print(f'setting mode failed, exception:{err}')
+                self.stream = False
+                self.b_start_grabbing = False
     def Trigger_once(self):
         ret = self.obj_cam.MV_CC_SetCommandValue("TriggerSoftware")
         if ret != 0:
