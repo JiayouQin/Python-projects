@@ -36,6 +36,7 @@ class CameraOperation():
         self.gain = gain
         self.numArray = None
         self.refreshed = False
+        self.cam_mode=0
     def Color_numpy(self,data,nWidth,nHeight): #把流数据转换为np阵列
         data_ = np.frombuffer(data, count=int(nWidth*nHeight*3), dtype=np.uint8, offset=0)
         numArray = np.zeros([nHeight, nWidth, 3],"uint8")
@@ -178,19 +179,12 @@ class CameraOperation():
 
     def Start_grabbing(self):
         if self.stream == False and self.connected == True:
-            if g.ui.feedback_mode.currentIndex() == 0:
-                ret = self.obj_cam.MV_CC_SetEnumValue("TriggerMode",0) #set trigger mode to continuous
-                print(f'set to continuous, success:{ret==0}')
-                ret = self.obj_cam.MV_CC_StartGrabbing()
-                print(f'start grabbing, success:{ret==0}')
-            else:
-                ret = self.obj_cam.MV_CC_SetEnumValue("TriggerMode",1)
-                if ret != 0:
-                    print('show error','set triggermode fail! ret = '+self.To_hex_str(ret))
-                ret = self.obj_cam.MV_CC_SetEnumValue("TriggerSource",7)
-                if ret != 0:
-                    print('show error','set triggersource fail! ret = '+self.To_hex_str(ret))
-                ret = self.obj_cam.MV_CC_StartGrabbing()
+
+            ret = self.obj_cam.MV_CC_SetEnumValue("TriggerMode",self.cam_mode) #set trigger mode to continuous !only 0 or 1!
+            print(f'set to continuous, success:{ret==0}')
+            ret = self.obj_cam.MV_CC_StartGrabbing()
+            print(f'start grabbing, success:{ret==0}')
+
             self.stream = True
             self.b_start_grabbing = True
             self.cam_thread = threading.Thread(target=self.Work_thread)
