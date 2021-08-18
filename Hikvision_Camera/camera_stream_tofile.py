@@ -16,7 +16,7 @@ from MvCameraControl_class import *
 import numpy as np
 from PIL import Image
 import ctypes
-import global_values as g
+
 
 #ch:打开相机 | en:open device
 class CameraOperation():
@@ -34,6 +34,8 @@ class CameraOperation():
         self.output_image = None
         self.stream = False
         self.gain = gain
+        self.numArray = None
+        self.refreshed = False
     def Color_numpy(self,data,nWidth,nHeight): #把流数据转换为np阵列
         data_ = np.frombuffer(data, count=int(nWidth*nHeight*3), dtype=np.uint8, offset=0)
         numArray = np.zeros([nHeight, nWidth, 3],"uint8")
@@ -262,8 +264,9 @@ class CameraOperation():
                     print('show error','convert pixel fail! ret = '+self.To_hex_str(ret))
                     continue
                 cdll.msvcrt.memcpy(byref(img_buff), stConvertParam.pDstBuffer, nConvertSize)
-                numArray = CameraOperation.Color_numpy(self,img_buff,self.st_frame_info.nWidth,self.st_frame_info.nHeight)
-                self.output_image = Image.fromarray(numArray, mode='RGB') 
+                self.numArray = CameraOperation.Color_numpy(self,img_buff,self.st_frame_info.nWidth,self.st_frame_info.nHeight)
+                self.output_image = Image.fromarray(numArray, mode='RGB')
+                self.refreshed = True
             #-------------------free buffer----------------------
             nRet = self.obj_cam.MV_CC_FreeImageBuffer(stOutFrame)
 
