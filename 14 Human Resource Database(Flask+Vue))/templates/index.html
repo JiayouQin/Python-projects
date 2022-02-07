@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+<script src='static/js/index.js'></script>>
+
+<style>
+#title_shadow {
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
+  background-color:skyblue;
+  filter: blur(10px);
+  z-index: 5;
+  opacity: 0.2;
+  position: fixed;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+td {
+  width: 20%;
+  text-align: left;
+}
+th {
+  width: 20%;
+  text-align: left;
+}
+#table_head {
+  width: 100%;
+  padding: 5px 5px 5px 5px;
+  border-radius: 10px;
+  height: 40px;
+  width: 100%;
+  margin: 5px 1% 5px 1%;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 50px;
+  transition: height 0.5s;
+  text-align: left;
+  overflow: hidden;
+  z-index: 20;
+}
+
+textarea{
+  height: 120px;
+  min-height: 50px;
+  max-height: 150px;
+  min-width: 80%;
+  width:100%;
+  display: none;
+}
+
+label {
+    background: #A5D6A7;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
+</style>
+<div id='title_shadow'></div>
+  <div id='app'>
+
+  <div style="position: absolute;left: 50%;transform: translate(-50%, 0);;z-index:8">
+  	<br><br><br><br><br>
+  		<div class="well">
+  			<div style="min-width: 1000px; max-width:1200px;min-height: 500px;">
+            <div style='padding: 0 30px 0 30px;'>
+              <table id="table_head">
+                <tr><th>姓名/ID</th><th>地区</th><th>专业</th><th>电话</th><th>已注册</th></tr>
+              </table>
+            </div>
+            {% if not session['user']%}
+            <h1 style='text-align: center;'> 非授权用户禁止读取数据，Demo数据： </h1>
+            {%endif%}
+
+            <div v-for='(e,i) in engineers'>
+              <div class='grow' style="background-color: lightgrey;">
+                <div style='padding: 0 30px 0 30px;'>
+                  <table id="engineers" style='width:100%'>
+                    <tr><td>[[e.name]]/[[e.id]]</td><td>[[e.province]]</td><td>[[e.major]]</td><td>[[e.cell]]</td><td>[[e.registered]]</td></tr>
+                    <a class="btn btn-danger" id='btn_del' @click='del_entry(e.id,i)' v-show='edit_mode'>X</a>
+                  </table>
+                  <br>
+                  <p>电话： [[e.cell]]<input v-model="e.cell" style='float:right' v-show='edit_mode'></p>
+                  <p>QQ： [[e.qq]]<input v-model="e.qq" style='float:right' v-show='edit_mode'></p>
+                  <p>微信： [[e.wechat]]<input v-model="e.wechat" style='float:right' v-show='edit_mode'></p>
+                  <p>注册单位： [[e.registered_unit]]<input v-model="e.registered_unit" style='float:right' v-show='edit_mode'></p>
+                  <p>前单位： [[e.previous_unit]]<input v-model="e.previous_unit" style='float:right' v-show='edit_mode'></p>
+                  <h4><b>备注：</b></h4>
+                  <p>[[e.note]]</p>
+                  <input v-model="e.note" placeholder="添加备注" style='width:90%' v-show='edit_mode'></textarea>
+                  <div style='width:100% position:absolute; bottom:30px'>
+                    <a class="btn btn-danger" style='position: absolute;right:130px;display:inline' @click='upload(e.id,i)' v-show='edit_mode'>确认修改</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+  		  </div>
+  		</div>
+
+  	<br><br><br><br><br>
+
+  <p style="padding: 0px 0px 50px 0px"></p>
+
+  </div>
+  <div style= 'position:fixed; right: 40px; bottom:100px;z-index: 30;'>
+    <button class="btn btn-warning" @click='toggle_edit()'>修改模式</button>
+  </div>
+  <div class="section_footer">
+
+    <div class='container-fluid' style='width:95%'>
+      <a class="btn btn-warning" id='create_entry' style='position: fixed;left: 0;'
+      @click='create_entry()'>新建记录</a>
+      <form action = "#" method = "POST">
+        <input type="text" name="name" placeholder="姓名" value="{{name if name}}"/>
+        <input type="text" name="province" placeholder="地区" value="{{province if province}}"/>
+        <input type="text" name="major" placeholder="专业" value="{{major if major}}"/>
+        <input type="text" name="cell" placeholder="手机" value="{{cell if cell}}"/>
+        <input type="text" name="qq" placeholder="qq" value="{{qq if qq}}"/>
+        <input type="text" name="wechat" placeholder="微信" value="{{wechat if wechat}}"/>
+        <input type="text" name="note" placeholder="搜索备注" value="{{note if note}}"/>
+        <label for="registered"><b style='color:black'>已注册:</b></label>
+        <select name="registered">
+          <option value="no">否</option>
+          <option value="yes">是</option>
+        </select>
+        <input class="btn btn-danger" type="submit" value="搜索"/>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const mountedApp = app.mount('#app')
+{% if session['user'] %}
+mountedApp.engineers = {{engi_json|safe}}
+{% endif %}
+console.log(mountedApp.engineers)
+
+</script>
+
+
+<style>
+
+#btn_del{
+  position:fixed;
+  right: 40px;
+  width: 30px;
+  height: 30px;
+  font-size: 1px;
+  text-anchor: center;
+}
+
+.section_footer {
+    user-select: none;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
+    text-align: center;
+    background-color: rgba(0,0,0,0.3);
+    }
+.grow {
+  padding: 5px 5px 5px 5px;
+  border-radius: 10px;
+  height: 40px;
+  width: 100%;
+  margin: 5px 1% 5px 1%;
+  position: relative;
+  transition: height 0.5s;
+  -webkit-transition: height 0.5s;
+  text-align: left;
+  overflow: hidden;
+}
+.grow:hover {
+  height: 600px;
+}
+
+.section_footer {
+    user-select: none;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: right;
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block content %}
+
+<div style="margin: 0 auto; width: 1000px">
+  <br><br><br><br><br>
+    <div class="well">
+    {% if 'user' in session %}
+      <h1>上传简介：</h1>
+      <h2>必须使用与示范表格一致的文件！！！</h2>
+      <p>用户可上传xlsx，名称不能带有空格</p>
+
+    
+    <form method="post" enctype="multipart/form-data">
+    <label for='column_start'>起始行</label><input type="number" name="column_start" />
+    <label for='column_end'>结束行</label><input type="number" name="column_end" /><br>
+    <label for='file'>上传文件</label>
+    <input type="file" name="file">
+    <input href='/' type="submit" name="submit" />
+    <br>
+    </form>
+    </div>
+    {% else %}
+    <h1>无相应授权！</h1>
+    {% endif %}
+
+
+  <br><br>
+
+<script>
+document.getElementById('fileInput').onchange = function () {
+  alert('Selected file: ' + this.value);
+};
+</script>
+
+{% endblock %}
