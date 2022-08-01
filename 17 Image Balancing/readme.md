@@ -4,3 +4,10 @@ It does not work on shadows as expected however it removes background gradient r
 
 thought process: Calculate the average value of each kernel and compare it with histogram average,
 then add the value to the center kernel. the unbalance in the image would be compensated, smaller kernel size would result in greater changes.
+
+Because I'm lazy this code uses a library that I have written, it loads all images in the current path and I can write less code with it.
+If you do not like this simply replace the code with (cvs.) with default openCV code.
+
+to use this library use:
+
+pip install cvsimpton  --upgrade
