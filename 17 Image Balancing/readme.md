@@ -15,4 +15,4 @@ pip install cvsimpton  --upgrade
 ![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/1.png)
 ![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/2.png)
 ![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/3.png)
-![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/4.png)
+![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/5.png)
