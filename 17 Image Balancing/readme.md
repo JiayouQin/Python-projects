@@ -11,3 +11,8 @@ If you do not like this simply replace the code with (cvs.) with default openCV 
 to use this library use:
 
 pip install cvsimpton  --upgrade
+
+![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/1.png)
+![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/2.png)
+![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/3.png)
+![](https://github.com/JiayouQin/Python-projects/blob/master/pictures/17%20Image%20Balancing/4.png)
