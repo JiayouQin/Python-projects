@@ -9,6 +9,6 @@ Notice the smoothened function does not represent the ideal function without the
 ![image](https://github.com/JiayouQin/Python-projects/blob/master/20%20Shape%20Analysis%20with%20FFT%20OpenCV/egg_flawed.jpg)
     this example will try to find an artificial flaw on an egg
 
-![image](https://github.com/JiayouQin/Python-projects/blob/master/20%20Shape%20Analysis%20with%20FFT%20OpenCV/smoothy.jpg)
+![image](https://github.com/JiayouQin/Python-projects/blob/master/20%20Shape%20Analysis%20with%20FFT%20OpenCV/smoothy.png)
     this chart shows the discrete function of the shape after polar transformation and the smoothened function.
     by using inverse polar transformation the flaw could also be marked on the original picture.
