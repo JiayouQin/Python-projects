@@ -6,9 +6,9 @@ In this example the egg mainly consists of low frequency component and the flaw 
 By calculating each pixel distance between the smoothened discrete points and the original and thresholding given value, the sudden changes on high frequency components can be found, which usually are flaws.
 Notice the smoothened function does not represent the ideal function without the flaw but rather an approximation, the flaw itself will leave residues after smoothened.
 
-![image](https://github.com/JiayouQin/Python-projects/blob/master/20%20Shape%20Analysis%20with%20FFT OpenCV/egg_flawed.jpg)
+![image](https://github.com/JiayouQin/Python-projects/blob/master/20%20Shape%20Analysis%20with%20FFT%20OpenCV/egg_flawed.jpg)
     this example will try to find an artificial flaw on an egg
 
-![image](https://github.com/JiayouQin/Python-projects/blob/master/20%20Shape%20Analysis%20with%20FFT OpenCV/smoothy.png)
+![image](https://github.com/JiayouQin/Python-projects/blob/master/20%20Shape%20Analysis%20with%20FFT%20OpenCV/smoothy.jpg)
     this chart shows the discrete function of the shape after polar transformation and the smoothened function.
     by using inverse polar transformation the flaw could also be marked on the original picture.
