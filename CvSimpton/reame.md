@@ -1,3 +1,0 @@
-write less boiler plate code in openCV
-
-working in progress....
