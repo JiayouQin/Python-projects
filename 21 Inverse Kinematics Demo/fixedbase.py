@@ -4,7 +4,6 @@ import random
 import math
 import sys
 
-
 class Joints():
     x = 0
     y = 0
@@ -18,7 +17,6 @@ class Joints():
     total_joints = []
 
     def __init__(self, x, y, angle, length):
-        
         self.x = x #initial point
         self.y = y
         self.x_ = 0 #endpoint
@@ -43,7 +41,6 @@ class Joints():
             self.parent.y_ = self.y
             self.parent.inverse()
         
-
     def foward(self):
         if self.parent:
             self.x,self.y = self.parent.x_, self.parent.y_
@@ -67,17 +64,9 @@ class Joints():
 
 
 screen_size = [800,800]
-grid_size = [40,40]
-exit = [10,10]
-tile_covered = 0
 run = True
 screen = pg.display.set_mode(screen_size)
-
 pg.init()
-path = [[0,0]]
-
-pg.display.update()
-
 Joints(100,100,0,100)
 Joints(100,100,0,150)
 Joints(100,100,0,50)
