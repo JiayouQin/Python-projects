@@ -1,7 +1,0 @@
-This script needs external module:
-matplotlib.pyplot
-networkx
-This is a weighted graph generator, I made this for myself to do some tests with dijkstra algorithm,
-it could also be interesting if you are trying to play other algorithms.
-nodes and edgescarcity could also be changed
-Have fun!
