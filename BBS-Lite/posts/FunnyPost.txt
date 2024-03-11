@@ -1,3 +1,0 @@
-def Fool():
-	print("Fool")
-	fool()
