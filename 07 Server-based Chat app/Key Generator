@@ -1,5 +1,0 @@
-from Cryptodome.Random import get_random_bytes
-
-key = get_random_bytes(32)
-with open('32byteskey.pem', mode='wb') as f:
-    f.write(key)    
