@@ -1,3 +1,0 @@
-1 Laser Type
-2 Minigun type
-3 Missiles

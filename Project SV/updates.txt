@@ -1,7 +1,0 @@
-V0.06
-added a missile launcher and projectile system, the projectile will be shown on the map. 
-
-known bug: 
-
-1.some projectile will bounce off the enemy ship and thrown away with very fast speed
-2.player ship will also be thrown away if move too fast
