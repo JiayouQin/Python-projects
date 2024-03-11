@@ -3,4 +3,4 @@ We can then use fourier transform to analyze it's frequency.
 By applying a low-pass filter we get a smoothened function, by subtracting this function we get the noise which is the flaw on the shape.
 By transforming this back we can also get the location of the flaw.
 
-!()[https://raw.githubusercontent.com/JiayouQin/Python-projects/Demo/pictures/FFTshapeAnalysis.bmp]
+![](https://raw.githubusercontent.com/JiayouQin/Python-projects/Demo/pictures/FFTshapeAnalysis.bmp)
