@@ -1,6 +1,6 @@
 Piston Simulation with air particles
 
-![](https://github.com/JiayouQin/Python-projects/blob/master/26%20Piston%20with%20air%20particles/piston%20short.gif?raw=true)
+![](https://github.com/JiayouQin/Python-projects/blob/master/26%20Piston%20with%20air%20particles/piston%20with%20particles.gif?raw=true)
 
 Cellular Automata on steroids.
 This is still a naive implementation and does in no way represent any physical simulation.
