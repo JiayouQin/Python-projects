@@ -1,4 +1,4 @@
-Video Stablizer based on SIFT
+Video Stabilizer based on SIFT
 
 ![](https://github.com/JiayouQin/Python-projects/blob/master/28%20SIFT%20Stablizer/Sift%20Stablizer.gif?raw=true)
 
